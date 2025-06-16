@@ -1,0 +1,10 @@
+name: data-analysis-proj
+dependencies:
+  - python=3.11
+  - beautifulsoup4
+  - requests
+  - matplotlib
+  - pandas
+  - numpy
+  - pip
+  - tk

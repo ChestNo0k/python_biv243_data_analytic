@@ -1,0 +1,10 @@
+{
+  "salary_calculation_method": "median",
+  "max_results_per_request": 10000,
+  "top_regions_count": 10,
+  "top_skills_count": 10,
+  "window_size": [
+    1280,
+    1024
+  ]
+}
