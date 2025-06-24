@@ -15,4 +15,3 @@ DATA_DIR = os.path.join("src", "data")
 
 # File paths
 AREAS_FILE = os.path.join(DATA_DIR, "areas.json")
-

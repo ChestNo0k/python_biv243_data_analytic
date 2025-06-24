@@ -14,10 +14,11 @@ class MainApplication(tk.Tk):
     Main application window that initializes and manages all GUI frames:
     MainMenu, SettingsFrame, and ResultFrame.
     """
+
     def __init__(self):
         super().__init__()
         width, height = get_window_size()
-        self.geometry(f"{width}x{height}")
+        self.geometry(f"{width}x{height-60}")
         self.title("Job Analysis")
         self.resizable(False, False)
 
@@ -49,6 +50,7 @@ class MainMenu(tk.Frame):
     Main menu frame with job title input, and navigation buttons for search,
     settings, and exit.
     """
+
     def __init__(self, parent, controller=None):
         super().__init__(parent)
         self.controller = controller
@@ -63,7 +65,11 @@ class MainMenu(tk.Frame):
         self.search_btn = tk.Button(self, text="Search", command=self.search)
         self.search_btn.place(relx=0.5, rely=0.48, relwidth=0.2, anchor="center")
 
-        self.settings_btn = tk.Button(self, text="Settings", command=lambda: controller.show_frame("SettingsFrame"))
+        self.settings_btn = tk.Button(
+            self,
+            text="Settings",
+            command=lambda: controller.show_frame("SettingsFrame"),
+        )
         self.exit_btn = tk.Button(self, text="Exit", command=controller.destroy)
 
         self.settings_btn.place(relx=0.02, rely=0.98, relwidth=0.15, anchor="sw")
@@ -106,6 +112,7 @@ class SettingsFrame(tk.Frame):
     """
     Settings frame allowing configuration of salary method, limits, and window size.
     """
+
     def __init__(self, parent, controller=None):
         super().__init__(parent)
         self.controller = controller
@@ -118,7 +125,12 @@ class SettingsFrame(tk.Frame):
         self.window_size_var = tk.StringVar()
 
         self.available_resolutions = [
-            "800x600", "1024x768", "1280x720", "1280x1024", "1440x900", "1920x1080"
+            "800x600",
+            "1024x768",
+            "1280x720",
+            "1280x1024",
+            "1440x900",
+            "1920x1080",
         ]
 
         self.build_widgets()
@@ -128,8 +140,12 @@ class SettingsFrame(tk.Frame):
         Build all widgets for settings interface.
         """
         config_data = config.load_config()
-        current_resolution = f"{config_data['window_size'][0]}x{config_data['window_size'][1]}"
-        self.salary_method_var.set(config_data.get("salary_calculation_method", "average"))
+        current_resolution = (
+            f"{config_data['window_size'][0]}x{config_data['window_size'][1]}"
+        )
+        self.salary_method_var.set(
+            config_data.get("salary_calculation_method", "average")
+        )
         self.max_results_var.set(str(config_data.get("max_results_per_request", 10)))
         self.top_regions_var.set(str(config_data.get("top_regions_count", 5)))
         self.top_skills_var.set(str(config_data.get("top_skills_count", 5)))
@@ -141,45 +157,69 @@ class SettingsFrame(tk.Frame):
         input_x = 0.5
         input_width = 0.4
 
-        tk.Label(self, text="Salary calculation method:").place(relx=label_x, rely=start_y, anchor="w")
-        tk.OptionMenu(self, self.salary_method_var, "average", "median")\
-            .place(relx=input_x, rely=start_y, relwidth=input_width, anchor="w")
+        tk.Label(self, text="Salary calculation method:").place(
+            relx=label_x, rely=start_y, anchor="w"
+        )
+        tk.OptionMenu(self, self.salary_method_var, "average", "median").place(
+            relx=input_x, rely=start_y, relwidth=input_width, anchor="w"
+        )
 
-        tk.Label(self, text="Max vacancies per request:").place(relx=label_x, rely=start_y + step_y, anchor="w")
-        tk.Entry(self, textvariable=self.max_results_var)\
-            .place(relx=input_x, rely=start_y + step_y, relwidth=input_width, anchor="w")
+        tk.Label(self, text="Max vacancies per request:").place(
+            relx=label_x, rely=start_y + step_y, anchor="w"
+        )
+        tk.Entry(self, textvariable=self.max_results_var).place(
+            relx=input_x, rely=start_y + step_y, relwidth=input_width, anchor="w"
+        )
 
-        tk.Label(self, text="Top regions:").place(relx=label_x, rely=start_y + 2 * step_y, anchor="w")
-        tk.Entry(self, textvariable=self.top_regions_var)\
-            .place(relx=input_x, rely=start_y + 2 * step_y, relwidth=input_width, anchor="w")
+        tk.Label(self, text="Top regions:").place(
+            relx=label_x, rely=start_y + 2 * step_y, anchor="w"
+        )
+        tk.Entry(self, textvariable=self.top_regions_var).place(
+            relx=input_x, rely=start_y + 2 * step_y, relwidth=input_width, anchor="w"
+        )
 
-        tk.Label(self, text="Top skills:").place(relx=label_x, rely=start_y + 3 * step_y, anchor="w")
-        tk.Entry(self, textvariable=self.top_skills_var)\
-            .place(relx=input_x, rely=start_y + 3 * step_y, relwidth=input_width, anchor="w")
+        tk.Label(self, text="Top skills:").place(
+            relx=label_x, rely=start_y + 3 * step_y, anchor="w"
+        )
+        tk.Entry(self, textvariable=self.top_skills_var).place(
+            relx=input_x, rely=start_y + 3 * step_y, relwidth=input_width, anchor="w"
+        )
 
-        tk.Label(self, text="Window size:").place(relx=label_x, rely=start_y + 4 * step_y, anchor="w")
-        tk.OptionMenu(self, self.window_size_var, *self.available_resolutions)\
-            .place(relx=input_x, rely=start_y + 4 * step_y, relwidth=input_width, anchor="w")
+        tk.Label(self, text="Window size:").place(
+            relx=label_x, rely=start_y + 4 * step_y, anchor="w"
+        )
+        tk.OptionMenu(self, self.window_size_var, *self.available_resolutions).place(
+            relx=input_x, rely=start_y + 4 * step_y, relwidth=input_width, anchor="w"
+        )
 
-        tk.Button(self, text="Save", command=self.save_config)\
-            .place(relx=0.5, rely=0.85, relwidth=0.3, anchor="center")
+        tk.Button(self, text="Save", command=self.save_config).place(
+            relx=0.5, rely=0.85, relwidth=0.3, anchor="center"
+        )
 
-        tk.Button(self, text="Back", command=lambda: self.controller.show_frame("MainMenu"))\
-            .place(relx=0.02, rely=0.98, relwidth=0.15, anchor="sw")
+        tk.Button(
+            self, text="Back", command=lambda: self.controller.show_frame("MainMenu")
+        ).place(relx=0.02, rely=0.98, relwidth=0.15, anchor="sw")
 
     def save_config(self):
         """
         Save all configured settings to config.json.
         """
         try:
-            config.save_config({
-                "salary_calculation_method": self.salary_method_var.get(),
-                "max_results_per_request": int(self.max_results_var.get()),
-                "top_regions_count": int(self.top_regions_var.get()),
-                "top_skills_count": int(self.top_skills_var.get()),
-                "window_size": list(map(int, self.window_size_var.get().split("x")))
-            })
-            messagebox.showinfo("Success", "Settings saved. Please restart the app to apply window size.")
+            config.save_config(
+                {
+                    "salary_calculation_method": self.salary_method_var.get(),
+                    "max_results_per_request": int(self.max_results_var.get()),
+                    "top_regions_count": int(self.top_regions_var.get()),
+                    "top_skills_count": int(self.top_skills_var.get()),
+                    "window_size": list(
+                        map(int, self.window_size_var.get().split("x"))
+                    ),
+                }
+            )
+            messagebox.showinfo(
+                "Success",
+                "Settings saved. Please restart the app to apply window size.",
+            )
         except ValueError:
             messagebox.showerror("Error", "Fields must contain positive numbers.")
 
@@ -191,12 +231,14 @@ class SettingsFrame(tk.Frame):
             widget.destroy()
         self.build_widgets()
 
+
 class ResultFrame(tk.Frame):
     """
     Frame that displays job analysis results including:
     salary, top skills, and top regions. Contains a scrollable area
     and a separate bottom navigation area with a 'Back' button.
     """
+
     def __init__(self, parent, controller=None):
         super().__init__(parent)
         self.controller = controller
@@ -206,12 +248,14 @@ class ResultFrame(tk.Frame):
         self.top_frame.pack(side="top", fill="both", expand=True)
 
         self.canvas = tk.Canvas(self.top_frame, bg="white", highlightthickness=0)
-        self.scrollbar = tk.Scrollbar(self.top_frame, orient="vertical", command=self.canvas.yview)
+        self.scrollbar = tk.Scrollbar(
+            self.top_frame, orient="vertical", command=self.canvas.yview
+        )
         self.scrollable_frame = tk.Frame(self.canvas, bg="white")
 
         self.scrollable_frame.bind(
             "<Configure>",
-            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all")),
         )
 
         self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
@@ -226,7 +270,11 @@ class ResultFrame(tk.Frame):
         self.bottom_frame = tk.Frame(self, bg="white", height=60)
         self.bottom_frame.pack(side="bottom", fill="x")
 
-        self.back_btn = tk.Button(self.bottom_frame, text="Back", command=lambda: controller.show_frame("MainMenu"))
+        self.back_btn = tk.Button(
+            self.bottom_frame,
+            text="Back",
+            command=lambda: controller.show_frame("MainMenu"),
+        )
         self.back_btn.pack(pady=10)
 
     def _bind_mousewheel(self, event):
@@ -246,14 +294,14 @@ class ResultFrame(tk.Frame):
             self.scrollable_frame,
             text=f"Query: {query}",
             font=("Arial", 16, "bold"),
-            bg="white"
+            bg="white",
         ).pack(pady=10, anchor="w", padx=100)
 
         tk.Label(
             self.scrollable_frame,
             text="Loading data...",
             bg="white",
-            font=("Arial", 12, "italic")
+            font=("Arial", 12, "italic"),
         ).pack(anchor="w", padx=100)
 
         threading.Thread(target=self._load_data, args=(query,), daemon=True).start()
@@ -273,8 +321,11 @@ class ResultFrame(tk.Frame):
             self.scrollable_frame.after(
                 0,
                 lambda e=e: tk.Label(
-                    self.scrollable_frame, text=f"Error: {e}", fg="red", font=("Arial", 12)
-                ).pack(anchor="w", padx=100, pady=10)
+                    self.scrollable_frame,
+                    text=f"Error: {e}",
+                    fg="red",
+                    font=("Arial", 12),
+                ).pack(anchor="w", padx=100, pady=10),
             )
 
     def _update_ui(self, salary, skills, regions, salary_distribution):
@@ -284,24 +335,27 @@ class ResultFrame(tk.Frame):
         self._display_regions(regions)
 
     def _display_salary(self, salary):
-        tk.Label(self.scrollable_frame, text="Salary", font=("Arial", 14, "bold"), bg="white").pack(
-            pady=(10, 5), anchor="w", padx=100
-        )
+        tk.Label(
+            self.scrollable_frame, text="Salary", font=("Arial", 14, "bold"), bg="white"
+        ).pack(pady=(10, 5), anchor="w", padx=100)
         tk.Label(
             self.scrollable_frame,
             text=f"{round(salary, 2)} RUB",
             font=("Arial", 18),
             bg="white",
-            fg="green"
+            fg="green",
         ).pack(pady=(0, 10), anchor="w", padx=100)
 
     def _display_salary_histogram(self, salaries):
         if not salaries:
             return
 
-        tk.Label(self.scrollable_frame, text="Salary Distribution", font=("Arial", 14, "bold"), bg="white").pack(
-            pady=(10, 5), anchor="w", padx=100
-        )
+        tk.Label(
+            self.scrollable_frame,
+            text="Salary Distribution",
+            font=("Arial", 14, "bold"),
+            bg="white",
+        ).pack(pady=(10, 5), anchor="w", padx=100)
 
         fig = Figure(figsize=(5, 3), dpi=100)
         ax = fig.add_subplot(111)
@@ -316,21 +370,25 @@ class ResultFrame(tk.Frame):
         canvas.get_tk_widget().pack(pady=10, padx=100, anchor="w")
 
     def _display_skills(self, skills):
-        tk.Label(self.scrollable_frame, text="Skills", font=("Arial", 14, "bold"), bg="white").pack(
-            pady=(10, 5), anchor="w", padx=100
-        )
+        tk.Label(
+            self.scrollable_frame, text="Skills", font=("Arial", 14, "bold"), bg="white"
+        ).pack(pady=(10, 5), anchor="w", padx=100)
         for s, c in skills:
             tk.Label(
                 self.scrollable_frame,
                 text=f"• {s}: {c}",
                 anchor="w",
                 bg="white",
-                font=("Arial", 12)
+                font=("Arial", 12),
             ).pack(fill="x", padx=120)
 
         fig = Figure(figsize=(5, 3), dpi=100)
         ax = fig.add_subplot(111)
-        ax.barh([s for s, _ in reversed(skills)], [c for _, c in reversed(skills)], color="#607d8b")
+        ax.barh(
+            [s for s, _ in reversed(skills)],
+            [c for _, c in reversed(skills)],
+            color="#607d8b",
+        )
         ax.set_xlabel("Frequency")
         ax.set_title("Top Skills")
         fig.tight_layout()
@@ -340,23 +398,112 @@ class ResultFrame(tk.Frame):
         canvas.get_tk_widget().pack(pady=10, padx=100, anchor="w")
 
     def _display_regions(self, regions):
-        tk.Label(self.scrollable_frame, text="Regions", font=("Arial", 14, "bold"), bg="white").pack(
-            pady=(10, 5), anchor="w", padx=100
-        )
+        tk.Label(
+            self.scrollable_frame,
+            text="Regions",
+            font=("Arial", 14, "bold"),
+            bg="white",
+        ).pack(pady=(10, 5), anchor="w", padx=100)
         for r, c in regions:
             tk.Label(
                 self.scrollable_frame,
                 text=f"• {r}: {c}",
                 anchor="w",
                 bg="white",
-                font=("Arial", 12)
+                font=("Arial", 12),
             ).pack(fill="x", padx=120)
 
         fig = Figure(figsize=(5, 3), dpi=100)
         ax = fig.add_subplot(111)
-        ax.barh([r for r, _ in reversed(regions)], [c for _, c in reversed(regions)], color="#3f51b5")
+        ax.barh(
+            [r for r, _ in reversed(regions)],
+            [c for _, c in reversed(regions)],
+            color="#3f51b5",
+        )
         ax.set_xlabel("Count")
         ax.set_title("Top Regions")
+        fig.tight_layout()
+
+        canvas = FigureCanvasTkAgg(fig, master=self.scrollable_frame)
+        canvas.draw()
+        canvas.get_tk_widget().pack(pady=10, padx=100, anchor="w")
+
+    def refresh(self, query):
+        """
+        Clear previous widgets and initiate background data loading
+        for the given job title query.
+        """
+        self.query = query
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
+
+        self.query_label = tk.Label(
+            self.scrollable_frame,
+            text=f"Query: {query}",
+            font=("Arial", 16, "bold"),
+            bg="white",
+        )
+        self.query_label.pack(pady=10, anchor="w", padx=100)
+
+        self.loading_label = tk.Label(
+            self.scrollable_frame,
+            text="Loading data...",
+            bg="white",
+            font=("Arial", 12, "italic"),
+        )
+        self.loading_label.pack(anchor="w", padx=100)
+
+        threading.Thread(target=self._load_data, args=(query,), daemon=True).start()
+
+    def _load_data(self, query):
+        """
+        Download vacancy data and calculate statistics in a background thread.
+        """
+        try:
+            vacancies = search_vacancies(query)
+            skills = da.get_top_skills(vacancies)
+            regions = da.get_top_regions(vacancies, get_top_regions_count())
+            salary = da.get_salary_statistics(vacancies)
+            salary_dist = da.get_salary_distribution(vacancies)
+
+            self.scrollable_frame.after(
+                0, lambda: self._update_ui(salary, salary_dist, skills, regions)
+            )
+        except Exception as e:
+            self.scrollable_frame.after(
+                0,
+                lambda e=e: tk.Label(
+                    self.scrollable_frame,
+                    text=f"Error: {e}",
+                    fg="red",
+                    font=("Arial", 12),
+                ).pack(anchor="w", padx=100, pady=10),
+            )
+
+    def _update_ui(self, salary, salary_dist, skills, regions):
+        """
+        Render all UI sections: salary, skills, regions after removing loading label.
+        """
+        if hasattr(self, "loading_label") and self.loading_label:
+            self.loading_label.destroy()
+
+        self._display_salary(salary)
+        self._display_salary_histogram(salary_dist)
+        self._display_skills(skills)
+        self._display_regions(regions)
+
+    def _display_salary_histogram(self, salary_dist):
+        """
+        Display histogram of salary distribution.
+        """
+        if not salary_dist:
+            return
+        fig = Figure(figsize=(5, 3), dpi=100)
+        ax = fig.add_subplot(111)
+        ax.hist(salary_dist, bins=10, color="#009688", edgecolor="black")
+        ax.set_title("Salary Distribution")
+        ax.set_xlabel("Salary")
+        ax.set_ylabel("Frequency")
         fig.tight_layout()
 
         canvas = FigureCanvasTkAgg(fig, master=self.scrollable_frame)

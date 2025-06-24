@@ -5,6 +5,7 @@ from collections import Counter
 from src.core.api_client import get_vacancy_skills
 from src.settings.config import get_top_skills_count
 
+
 def get_top_skills(vacancies: list) -> list:
     """
     Get the top X most common skills across a list of vacancies.
@@ -27,6 +28,7 @@ def get_top_skills(vacancies: list) -> list:
 
     return skills_counter.most_common(top_x)
 
+
 def get_top_regions(vacancies: list, top_x: int) -> list:
     """
     Determines the most popular regions for job vacancies.
@@ -38,9 +40,14 @@ def get_top_regions(vacancies: list, top_x: int) -> list:
     Returns:
         list: A list of tuples with the region name and its frequency, sorted by popularity.
     """
-    regions = [vacancy.get("area", {}).get("name") for vacancy in vacancies if vacancy.get("area")]
+    regions = [
+        vacancy.get("area", {}).get("name")
+        for vacancy in vacancies
+        if vacancy.get("area")
+    ]
     region_counts = Counter(regions)
     return region_counts.most_common(top_x)
+
 
 def calculate_salary(vacancies: list, method: str = None) -> float:
     """
@@ -67,7 +74,9 @@ def calculate_salary(vacancies: list, method: str = None) -> float:
         if salary_from is not None and salary_to is None:
             salary_values.append(convert_salary_to_rub(salary_from, currency))
         elif salary_to is not None and salary_from is None:
-            salary_values.append(convert_salary_to_rub(salary_to, currency))  # Учитаем "до"
+            salary_values.append(
+                convert_salary_to_rub(salary_to, currency)
+            )  # Учитаем "до"
         elif salary_from is not None and salary_to is not None:
             avg_salary = (salary_from + salary_to) / 2
             salary_values.append(convert_salary_to_rub(avg_salary, currency))
@@ -81,7 +90,6 @@ def calculate_salary(vacancies: list, method: str = None) -> float:
         return np.median(salary_values)
     else:
         raise ValueError("Invalid calculation method: choose 'average' or 'median'.")
-
 
 
 def get_salary_statistics(vacancies: list) -> float:
@@ -99,6 +107,7 @@ def get_salary_statistics(vacancies: list) -> float:
     method = get_salary_calculation_method()
     stat_salary = calculate_salary(vacancies, method)
     return stat_salary
+
 
 def get_salary_distribution(vacancies: list) -> list:
     """

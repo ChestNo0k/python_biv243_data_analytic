@@ -7,3 +7,7 @@ This project was created to carry out an individual project in the discipline pr
 ```bash
 python main.py
 ```
+
+User doc: user_documentation.docx
+
+Dev doc: developer_documentation.docx
