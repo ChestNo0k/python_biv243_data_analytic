@@ -76,7 +76,7 @@ def calculate_salary(vacancies: list, method: str = None) -> float:
         elif salary_to is not None and salary_from is None:
             salary_values.append(
                 convert_salary_to_rub(salary_to, currency)
-            )  # Учитаем "до"
+            )
         elif salary_from is not None and salary_to is not None:
             avg_salary = (salary_from + salary_to) / 2
             salary_values.append(convert_salary_to_rub(avg_salary, currency))

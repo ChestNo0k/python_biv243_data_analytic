@@ -130,7 +130,6 @@ class SettingsFrame(tk.Frame):
             "1280x720",
             "1280x1024",
             "1440x900",
-            "1920x1080",
         ]
 
         self.build_widgets()
